@@ -1,0 +1,63 @@
+version : "3" 
+services :
+    webserver :
+        build :
+            context : ./docker/php
+            dockerfile : Dockerfile 
+        container_name : php_elasticsearch
+        ports : 
+            - 8483:80
+        networks :
+            backend-net :
+                ipv4_address : 13.24.22.19
+        links :
+            - database
+        depends_on :
+            - database
+        volumes :
+            - .:/var/www/html
+        command : sh /var/www/html/docker/php/init.sh
+    database :
+        container_name : db_elasticsearch
+        image : mariadb
+        ports :
+            - "9408:3306"
+        networks :
+            backend-net :
+                ipv4_address : 13.24.22.18
+        environment :
+            - MYSQL_ROOT_PASSWORD=3*DB6ci9
+            - MYSQL_DATABASE=my_db
+    elasticsearch :
+        container_name : ci_elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+        ports :
+            - "9520:9200"
+            - "9530:9300"
+        environment :
+            - node.name=es00
+            - cluster.name=es-docker-cluster
+            - cluster.initial_master_nodes=es00
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        volumes:
+            - data-es00:/usr/share/elasticsearch/data
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        networks :
+            backend-net :
+                ipv4_address : 13.24.22.20
+
+volumes:
+    data-es00:
+        driver: local
+        
+networks :
+    backend-net :
+        driver : bridge
+        ipam :
+            driver : default
+            config :
+                - subnet : 13.24.22.0/26
