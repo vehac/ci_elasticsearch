@@ -45,14 +45,15 @@ class Ci_elasticsearch {
         return TRUE;
     }
     
-    public function get_found_document($index, $id) {
-        $params = ['index' => $index, 'id'  => $id];
+    public function get_found_document($index, $type, $id) {
+        //db - colecction - id
+        $params = ['index' => $index, 'type' => $type, 'id'  => $id];
         $results = $this->client->get($params);
         return $results['found'];
     }
     
-    public function exists_document($index, $id) {
-        $params = ['index' => $index, 'id' => $id];
+    public function exists_document($index, $type, $id) {
+        $params = ['index' => $index, 'type' => $type, 'id' => $id];
         $response = $this->client->exists($params);
         return $response;
     }

@@ -137,7 +137,7 @@ class Home extends CI_Controller {
             if($obj_article === TRUE) {
                 $exists_index = $this->ci_elasticsearch->exists_index('es_articles');
                 if($exists_index === 200) {
-                    $response = $this->ci_elasticsearch->exists_document('es_articles', $id);
+                    $response = $this->ci_elasticsearch->exists_document('es_articles', 'es_articles', $id);
                     if($response->getStatusCode() === 200) {
                         $body = [
                             'doc' => [
