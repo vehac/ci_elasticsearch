@@ -46,7 +46,7 @@ class Ci_elasticsearch {
     }
     
     public function get_found_document($index, $type, $id) {
-        //db - colecction - id
+        //db - collection - id
         $params = ['index' => $index, 'type' => $type, 'id'  => $id];
         $results = $this->client->get($params);
         return $results['found'];
